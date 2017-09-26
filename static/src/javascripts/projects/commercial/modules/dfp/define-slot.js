@@ -96,6 +96,55 @@ const defineSlot = (adSlotNode: Element, sizes: Object): Object => {
         slotReady = setHighMerchSlotTargeting(slot, slotTarget);
     }
 
+    if (config.switches.iasOptimisation) {
+        /* eslint-disable no-underscore-dangle */
+        window.__iasPET = window.__iasPET || {};
+        const iasPET = window.__iasPET;
+        /* eslint-enable no-underscore-dangle */
+
+        iasPET.queue = iasPET.queue || [];
+        iasPET.pubId = '59666047';
+
+        const iasPETSlots = window.iasPETSlots || [];
+
+        let loadedResolve;
+
+        const iasDataPromise = new Promise(resolve => {
+            loadedResolve = resolve;
+        });
+
+        const iasDataHandler = () => {
+            console.log('Applying IAS targetting.');
+            iasPET.setTargetingForGPT();
+            loadedResolve();
+        };
+
+        // IAS Optimization Targeting
+        iasPETSlots.push({
+            adSlotId: id,
+            size: sizes,
+            adUnitPath: adUnit(), // why do we have this method and not just slot.getAdUnitPath()?
+        });
+
+        iasPET.queue.push({
+            adSlots: iasPETSlots,
+            dataHandler: iasDataHandler,
+        });
+
+        const iasTimeoutDuration = 2000;
+
+        const timeout = new Promise(resolve => {
+            setTimeout(() => {
+                loadedResolve();
+                resolve();
+            }, iasTimeoutDuration);
+        });
+
+        slotReady = slotReady.then(() =>
+            Promise.race([timeout, iasDataPromise])
+        );
+    }
+
     if (slotTarget === 'im' && config.page.isbn) {
         slot.setTargeting('isbn', config.page.isbn);
     }
