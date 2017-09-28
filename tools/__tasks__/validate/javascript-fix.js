@@ -29,7 +29,12 @@ module.exports = {
             task: ctx =>
                 execa(
                     'eslint',
-                    ['*.js', 'tools/**/*.js', 'dev/**/*.js'].concat(config)
+                    [
+                        '*.js',
+                        'tools/**/*.js',
+                        'dev/**/*.js',
+                        'ui/**/*.js',
+                    ].concat(config)
                 ).then(handleSuccess.bind(null, ctx)),
         },
     ],
