@@ -11,13 +11,19 @@ const webpackConfig = require('../__config__/webpack.config.dev')({
 const compiler = webpack(webpackConfig);
 const app = express();
 
+const fontDefinitions = require('../__helpers__/fontDefinitions');
+
 app.use(
     webpackDevMiddleware(compiler, {
         publicPath: webpackConfig.output.publicPath,
         noInfo: true,
     })
 );
+
+app.use('/assets/fonts', express.static('../static/target/fonts'))
+
 app.use(webpackHotMiddleware(compiler));
+
 app.get('/', (req, res) => {
     delete require.cache[require.resolve('../dist/ui.bundle.server')];
 
@@ -31,6 +37,7 @@ app.get('/', (req, res) => {
             bundleUrl: '/assets/javascripts/ui.bundle.browser.js',
             polyfillioUrl:
                 'https://assets.guim.co.uk/polyfill.io/v2/polyfill.min.js?rum=0&features=es6,es7,es2017,default-3.6,HTMLPictureElement&flags=gated&callback=guardianPolyfilled',
+            fontDefinitions
         })
     );
 });
