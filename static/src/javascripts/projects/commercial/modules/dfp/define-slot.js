@@ -95,7 +95,7 @@ const defineSlot = (adSlotNode: Element, sizes: Object): Object => {
             .defineSizeMapping(sizeOpts.sizeMapping);
         slotReady = setHighMerchSlotTargeting(slot, slotTarget);
     }
-
+    console.log(`Defining ${id}`);
     if (config.switches.iasOptimisation) {
         /* eslint-disable no-underscore-dangle */
         window.__iasPET = window.__iasPET || {};
@@ -135,6 +135,7 @@ const defineSlot = (adSlotNode: Element, sizes: Object): Object => {
 
         const timeout = new Promise(resolve => {
             setTimeout(() => {
+                console.log('Timed out of IAS request.');
                 loadedResolve();
                 resolve();
             }, iasTimeoutDuration);
