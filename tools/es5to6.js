@@ -43,9 +43,9 @@ git
     .status((err, status) => {
         if (
             status.current !== 'master' ||
-            status.files.length > 0 ||
-            status.ahead !== 0 ||
-            status.behind !== 0
+            status.files.length > 0 // ||
+//            status.ahead !== 0 ||
+//            status.behind !== 0
         ) {
             console.log(
                 chalk.red(
